@@ -1,46 +1,49 @@
 import subprocess
 from pathlib import Path
+import sys
 
 script_path = Path(__file__).resolve()
-print(f"Script file path: {script_path}")
+directory = script_path.parent
 
-
-script_dir = script_path.parent
-print(f"Script directory: {script_dir}")
-
-directory = script_dir
-ask  = int(input("how many times to open cmd >> "))
 def find_file(directory):
-        subprocess.Popen(f'start cmd /K "cd {directory}"', shell=True)
-def open_cmd(ask):
-    for i in range(ask):
-        print(f"Opening cmd window {i} and executing 'dir /s'...")
+     
 
-        subprocess.Popen(f'start cmd /K "dir /s {directory}"', shell=True)
-        # cd C:\Users\vpbg-ucenik08\Desktop
-        # C:/Users/vpbg-ucenik08/AppData/Local/Programs/Python/Python313/python.exe print.py
+     print(directory
+     )
+
+def open_cmd(ask, directory):
+    for i in range(ask):
+        print(f"Opening cmd window {i+1}...")
+        subprocess.Popen(f'start cmd /K "dir /s "{directory}""', shell=True)
+
 def run_file(script_path):
-    subprocess.Popen(f'start cmd /K "python {script_path}"', shell=True)
+
+    subprocess.Popen(f'start cmd /K "{sys.executable} "{script_path}""', shell=True)
+
 def main():
-     print("OpenWin")
-     options = [
-          "1. find file",
-          "2. run file",
-          "3. open cmd",
-          "4. run all",
-     ]
-     print(options)
-     print("What to run (type the number) ")
-     ask_command = (input("\>>> "))
-     if ask_command == "1" or "1.":
-          find_file(directory)
-     elif ask_command == "2" or "2.":
-          run_file(script_path)
-     elif ask_command == "3" or "3.":
-          open_cmd(ask)
-     elif ask_command == "4" or "4.":
+    print("\n--- OpenWin ---")
+    options = ["1. find file", "2. run file", "3. open cmd", "4. run all"]
+    print("\n".join(options))
+    
+    ask_command = input("What to run (type the number) >>> ").strip()
+
+
+    if ask_command in ["1", "1."]:
+        find_file(directory)
+        print(directory)
+    elif ask_command in ["2", "2."]:
+        run_file(script_path)
+    elif ask_command in ["3", "3."]:
+        ask = int(input("How many times to open cmd >> "))
+        open_cmd(ask, directory)
+    elif ask_command in ["4", "4."]:
+        ask = int(input("How many times to open cmd >> "))
         find_file(directory)
         run_file(script_path)
-        open_cmd(ask)
-while True:
-    main()
+        open_cmd(ask, directory)
+    else:
+        print("Invalid option.")
+
+if __name__ == "__main__":
+    while True:
+        main()
